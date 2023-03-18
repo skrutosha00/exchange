@@ -1,0 +1,38 @@
+{
+  "messageUmiDataSuccess": {
+    "en": "UMI data was loaded successfully",
+    "ru": "Данные курса UMI успешно обновлены"
+  },
+  "messageUmiDataError": {
+    "en": "Did not manage to load UMI data",
+    "ru": "Произошла ошибка при загрузке курса UMI"
+  },
+  "messageUzsDataSuccess": {
+    "en": "UZS data was loaded successfully",
+    "ru": "Данные курса UZS успешно обновлены"
+  },
+  "messageUzsDataError": {
+    "en": "Did not manage to load UZS data",
+    "ru": "Произошла ошибка при загрузке курса UZS"
+  },
+  "dateOfLastUpdate": {
+    "en": "The rates were updated",
+    "ru": "Данные были загружены"
+  },
+  "rateDataHeader": {
+    "en": "Right now 1 UMI equals",
+    "ru": "Прямо сейчас 1 UMI равен"
+  },
+  "loaderTip": {
+    "en": "Loading...",
+    "ru": "Загрузка..."
+  },
+  "updateButtonText": {
+    "en": "Update rates",
+    "ru": "Обновить курс"
+  },
+  "updateButtonHint": {
+    "en": "The rates are updated automatically every minute, but you can still use this",
+    "ru": "Курс обновляется автоматически каждую минуту, но вы можете использовать кнопку"
+  }
+}
