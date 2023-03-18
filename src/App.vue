@@ -1,5 +1,5 @@
 <template>
-  <h1>Give me rate</h1>
+  <h1>Umi Rate</h1>
 
   <LangSelect v-model:lang="lang" class="lang-select" />
 
