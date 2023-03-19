@@ -30,7 +30,7 @@ import ExchangeForm from "@/components/ExchangeForm.vue";
 import RateData from "@/components/RateData.vue";
 import LangSelect from "@/components/LangSelect.vue";
 import translate from "@/assets/translate.json";
-import UpdateButton from "./components/UpdateButton.vue";
+import UpdateButton from "@/components/UpdateButton.vue";
 
 export default {
   name: "App",
@@ -58,7 +58,9 @@ export default {
     },
     async fetchUzsRate() {
       return await fetch(
-        "https://corsanywhere.herokuapp.com/https://nbu.uz/exchange-rates/json/"
+        // "https://corsanywhere.herokuapp.com/https://nbu.uz/exchange-rates/json/"
+        // `${window.location}get_uzs_rate`
+        "/get_uzs_rate"
       )
         .then((data) => data.json())
         .then((data) => data.filter((info) => info.code == "USD"))
