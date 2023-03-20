@@ -1,25 +1,30 @@
 <template>
   <h1>Umi Rate</h1>
 
+  <div class="link-cont">
+    <a-button type="link" href="https://t.me/dostatok_start_bot" class="link">
+      {{ translate.dostatokLink[lang] }}
+    </a-button>
+
+    <a-button type="link" href="https://t.me/umipay2_bot" class="link">
+      {{ translate.umiBotLink[lang] }}
+    </a-button>
+  </div>
+
   <LangSelect v-model:lang="lang" class="lang-select" />
 
-  <RateData :umiRate="umiRate" :lang="lang" :translate="translate" />
-
   <ExchangeForm
-    v-model:umiValue="umiValue"
-    v-model:currencyValue="currencyValue"
-    v-model:currency="currency"
+    v-model:cryptoValue="cryptoValue"
+    v-model:fiatValue="fiatValue"
+    v-model:cryptoCurrency="cryptoCurrency"
+    v-model:fiatCurrency="fiatCurrency"
     v-model:focusedInput="focusedInput"
     class="app_form" />
 
-  <UpdateButton
-    :lang="lang"
-    :translate="translate"
-    @btnClick="updateClickHandler"
-    class="app_update" />
+  <RateData :cryptoRate="cryptoRate" :lang="lang" :translate="translate" />
 
   <p class="info">
-    {{ translate.dateOfLastUpdate[this.lang] }}:
+    {{ translate.dateOfLastUpdate[lang] }}:
     {{ lastUpdate }}
   </p>
 </template>
@@ -30,7 +35,6 @@ import ExchangeForm from "@/components/ExchangeForm.vue";
 import RateData from "@/components/RateData.vue";
 import LangSelect from "@/components/LangSelect.vue";
 import translate from "@/assets/translate.json";
-import UpdateButton from "@/components/UpdateButton.vue";
 
 export default {
   name: "App",
@@ -38,28 +42,36 @@ export default {
     return {
       lang: "en",
       translate: translate,
-      umiValue: 0,
-      currencyValue: 0,
-      currency: "USD",
+      cryptoValue: 0,
+      fiatValue: 0,
+      cryptoCurrency: "UMI",
+      fiatCurrency: "USD",
       focusedInput: null,
-      umiRate: {
-        USD: null,
-        RUB: null,
-        UZS: null
+      cryptoRate: {
+        UMI: {
+          USD: null,
+          RUB: null,
+          UZS: null,
+          GLZ: null
+        },
+        GLZ: {
+          USD: null,
+          RUB: null,
+          UZS: null
+        }
       },
-      lastUpdate: "Loading..."
+      lastUpdate: "..."
     };
   },
   methods: {
-    async fetchUmiRate() {
-      return await fetch("https://stats.umi.top/rates")
-        .then((data) => data.json())
-        .then((data) => data.data);
+    async fetchCryptoRate() {
+      return await fetch("https://stats.umi.top/rates").then((data) =>
+        data.json()
+      );
     },
     async fetchUzsRate() {
       return await fetch(
-        // "https://corsanywhere.herokuapp.com/https://nbu.uz/exchange-rates/json/"
-        // `${window.location}get_uzs_rate`
+        // dev "https://corsanywhere.herokuapp.com/https://nbu.uz/exchange-rates/json/"
         "/get_uzs_rate"
       )
         .then((data) => data.json())
@@ -67,57 +79,52 @@ export default {
         .then((data) => data[0].cb_price);
     },
 
-    async setUmiRate(silent = false) {
-      let ratesData = await this.fetchUmiRate().catch((err) => {
+    async setCryptoRate() {
+      let ratesData = await this.fetchCryptoRate().catch((err) => {
         console.log(err);
-
-        if (!silent) {
-          message.error(translate.messageUmiDataError[this.lang]);
-        }
+        message.error(translate.messageUmiDataError[this.lang]);
       });
 
       if (!ratesData) {
         return;
       }
 
-      if (!silent) {
-        message.success(translate.messageUmiDataSuccess[this.lang]);
-      }
+      this.cryptoRate.UMI.USD = +ratesData.data.USD.value;
+      this.cryptoRate.UMI.RUB = +ratesData.data.RUB.value;
+      this.cryptoRate.UMI.GLZ = +ratesData.tokens.GLZ.value;
 
-      this.umiRate.USD = +ratesData.USD.value;
-      this.umiRate.RUB = +ratesData.RUB.value;
+      this.cryptoRate.GLZ.USD =
+        this.cryptoRate.UMI.USD / this.cryptoRate.UMI.GLZ;
+
+      this.cryptoRate.GLZ.RUB =
+        this.cryptoRate.UMI.RUB / this.cryptoRate.UMI.GLZ;
     },
-    async setUzsRate(silent = false) {
+    async setUzsRate() {
       let uzsRate = await this.fetchUzsRate().catch((err) => {
         console.log(err);
-
-        if (!silent) {
-          message.error(translate.messageUzsDataError[this.lang]);
-        }
+        message.error(translate.messageUzsDataError[this.lang]);
       });
 
       if (!uzsRate) {
         return;
       }
 
+      this.cryptoRate.UMI.UZS = this.cryptoRate.UMI.USD * uzsRate;
+
+      this.cryptoRate.GLZ.UZS =
+        this.cryptoRate.UMI.UZS / this.cryptoRate.UMI.GLZ;
+    },
+
+    async setRates(silent = false) {
       if (!silent) {
-        message.success(translate.messageUzsDataSuccess[this.lang]);
+        this.cryptoRate = {
+          UMI: {},
+          GLZ: {}
+        };
       }
 
-      this.umiRate.UZS = this.umiRate.USD * uzsRate;
-    },
-
-    async setRates() {
-      this.umiRate = { USD: null, RUB: null, UZS: null };
-
-      await this.setUmiRate(false);
+      await this.setCryptoRate(false);
       await this.setUzsRate(false);
-
-      this.lastUpdate = new Date().toLocaleString();
-    },
-    async setRatesSilent() {
-      await this.setUmiRate(true);
-      await this.setUzsRate(true);
 
       this.lastUpdate = new Date().toLocaleString();
     },
@@ -129,33 +136,43 @@ export default {
   components: {
     ExchangeForm,
     RateData,
-    LangSelect,
-    UpdateButton
+    LangSelect
   },
   async mounted() {
     this.setRates();
 
     setInterval(() => {
-      this.setRatesSilent();
+      this.setRates(true);
     }, 58 * 1000);
   },
   watch: {
-    umiValue(newValue) {
-      if (this.focusedInput == "currencyInput") {
+    cryptoValue(newValue) {
+      if (this.focusedInput == "fiatInput") {
         return;
       }
 
-      this.currencyValue = +(newValue * this.umiRate[this.currency]).toFixed(2);
+      this.fiatValue = +(
+        newValue * this.cryptoRate[this.cryptoCurrency][this.fiatCurrency]
+      ).toFixed(2);
     },
-    currencyValue(newValue) {
-      if (this.focusedInput == "umiInput") {
+    fiatValue(newValue) {
+      if (this.focusedInput == "cryptoInput") {
         return;
       }
 
-      this.umiValue = +(newValue / this.umiRate[this.currency]).toFixed(2);
+      this.cryptoValue = +(
+        newValue / this.cryptoRate[this.cryptoCurrency][this.fiatCurrency]
+      ).toFixed(2);
     },
-    currency(newValue) {
-      this.currencyValue = +(this.umiValue * this.umiRate[newValue]).toFixed(2);
+    fiatCurrency(newValue) {
+      this.fiatValue = +(
+        this.cryptoValue * this.cryptoRate[this.cryptoCurrency][newValue]
+      ).toFixed(2);
+    },
+    cryptoCurrency(newValue) {
+      this.fiatValue = +(
+        this.cryptoValue * this.cryptoRate[newValue][this.fiatCurrency]
+      ).toFixed(2);
     }
   }
 };
@@ -169,6 +186,19 @@ export default {
   padding: 15px;
 }
 
+.link-cont {
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+  max-width: 380px;
+  margin: auto;
+}
+
+.link {
+  padding: 0;
+}
+
 .app_form {
   margin: 20px auto;
 }
@@ -179,7 +209,7 @@ export default {
   top: 10px;
 }
 
-.app_update {
-  margin: 30px auto 40px;
+.info {
+  margin: 0;
 }
 </style>

@@ -7,46 +7,39 @@
       class="spin"
       v-if="!dataLoaded" />
 
-    <a-timeline v-if="dataLoaded">
-      <a-timeline-item>{{ umiRate.USD }} USD</a-timeline-item>
-      <a-timeline-item>{{ umiRate.RUB }} RUB</a-timeline-item>
-      <a-timeline-item>{{ umiRate.UZS.toFixed(2) }} UZS</a-timeline-item>
+    <a-timeline v-if="dataLoaded" v-for="cryptoCurrency in ['UMI', 'GLZ']">
+      <a-timeline-item v-for="value in valueList">
+        <div class="inner">
+          {{ value }} {{ cryptoCurrency }} =
+          {{ (cryptoRate[cryptoCurrency].USD * value).toFixed(2) }} USD /
+          {{ (cryptoRate[cryptoCurrency].RUB * value).toFixed(2) }} RUB /
+          {{ (cryptoRate[cryptoCurrency].UZS * value).toFixed(2) }} UZS
+        </div>
+      </a-timeline-item>
     </a-timeline>
   </div>
 </template>
 
-<style scoped>
-.header {
-  margin-bottom: 20px;
-}
-
-.data {
-  position: relative;
-  height: 100px;
-  margin: 20px auto;
-}
-.spin {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-</style>
-
 <script>
 export default {
   props: {
-    umiRate: Object,
+    cryptoRate: Object,
     lang: String,
     translate: Object
+  },
+  data() {
+    return {
+      valueList: [1, 4400, 44000, 66000, 88000, 100000]
+    };
   },
   computed: {
     dataLoaded() {
       if (
-        this.umiRate &&
-        this.umiRate.USD &&
-        this.umiRate.RUB &&
-        this.umiRate.UZS
+        this.cryptoRate &&
+        this.cryptoRate.UMI.USD &&
+        this.cryptoRate.UMI.RUB &&
+        this.cryptoRate.UMI.UZS &&
+        this.cryptoRate.UMI.GLZ
       ) {
         return true;
       }
@@ -56,3 +49,33 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.header {
+  margin-bottom: 20px;
+}
+
+.data {
+  position: relative;
+  min-height: 100px;
+}
+
+li {
+  font-size: 11px;
+  padding-bottom: 14px;
+}
+
+.inner {
+  position: relative;
+  top: 3px;
+  left: -10px;
+  width: calc(100% + 10px);
+}
+
+.spin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>

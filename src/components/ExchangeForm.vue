@@ -2,23 +2,31 @@
   <form>
     <a-input-number
       @focus="(event) => $emit('update:focusedInput', event.target.id)"
-      @change="(newValue) => $emit('update:umiValue', newValue)"
-      :value="umiValue"
+      @change="(newValue) => $emit('update:cryptoValue', newValue)"
+      :value="cryptoValue"
       :min="0"
-      addon-after="UMI"
-      id="umiInput">
+      id="cryptoInput">
+      <template #addonAfter>
+        <a-select
+          :value="cryptoCurrency"
+          @change="(newValue) => $emit('update:cryptoCurrency', newValue)"
+          style="width: 80px">
+          <a-select-option value="UMI">UMI</a-select-option>
+          <a-select-option value="GLZ">GLZ</a-select-option>
+        </a-select>
+      </template>
     </a-input-number>
 
     <a-input-number
       @focus="(event) => $emit('update:focusedInput', event.target.id)"
-      @change="(newValue) => $emit('update:currencyValue', newValue)"
-      :value="currencyValue"
+      @change="(newValue) => $emit('update:fiatValue', newValue)"
+      :value="fiatValue"
       :min="0"
-      id="currencyInput">
+      id="fiatInput">
       <template #addonAfter>
         <a-select
-          :value="currency"
-          @change="(newValue) => $emit('update:currency', newValue)"
+          :value="fiatCurrency"
+          @change="(newValue) => $emit('update:fiatCurrency', newValue)"
           style="width: 80px">
           <a-select-option value="USD">USD</a-select-option>
           <a-select-option value="RUB">RUB</a-select-option>
@@ -44,9 +52,10 @@ form {
 <script>
 export default {
   props: {
-    umiValue: Number,
-    currencyValue: Number,
-    currency: String,
+    cryptoValue: Number,
+    fiatValue: Number,
+    cryptoCurrency: String,
+    fiatCurrency: String,
     focusedInput: String
   }
 };

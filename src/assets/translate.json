@@ -1,15 +1,15 @@
 {
-  "messageUmiDataSuccess": {
-    "en": "UMI data was loaded successfully",
-    "ru": "Данные курса UMI успешно обновлены"
+  "dostatokLink": {
+    "en": "Link to DoStaTok game",
+    "ru": "Ссылка на ДоСтаТок"
+  },
+  "umiBotLink": {
+    "en": "Link to Umipay bot",
+    "ru": "Ссылка на Umipay бота"
   },
   "messageUmiDataError": {
     "en": "Did not manage to load UMI data",
     "ru": "Произошла ошибка при загрузке курса UMI"
-  },
-  "messageUzsDataSuccess": {
-    "en": "UZS data was loaded successfully",
-    "ru": "Данные курса UZS успешно обновлены"
   },
   "messageUzsDataError": {
     "en": "Did not manage to load UZS data",
@@ -20,19 +20,11 @@
     "ru": "Данные были загружены"
   },
   "rateDataHeader": {
-    "en": "Right now 1 UMI equals",
-    "ru": "Прямо сейчас 1 UMI равен"
+    "en": "Right now",
+    "ru": "Прямо сейчас"
   },
   "loaderTip": {
     "en": "Loading...",
     "ru": "Загрузка..."
-  },
-  "updateButtonText": {
-    "en": "Update rates",
-    "ru": "Обновить курс"
-  },
-  "updateButtonHint": {
-    "en": "The rates are updated automatically every minute, but you can still use this",
-    "ru": "Курс обновляется автоматически каждую минуту, но вы можете использовать кнопку"
   }
 }

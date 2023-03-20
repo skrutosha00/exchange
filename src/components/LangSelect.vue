@@ -1,14 +1,9 @@
 <template>
-  <a-select
-    :value="lang"
-    @change="(newValue) => $emit('update:lang', newValue)"
-    style="width: 120px">
-    <a-select-option value="en">English</a-select-option>
-    <a-select-option value="ru">Русский</a-select-option>
-  </a-select>
+  <div class="lang-select">
+    <img src="@/assets/ru.svg" alt="" @click="$emit('update:lang', 'ru')" />
+    <img src="@/assets/gb.svg" alt="" @click="$emit('update:lang', 'en')" />
+  </div>
 </template>
-
-<style></style>
 
 <script>
 export default {
@@ -17,3 +12,15 @@ export default {
   }
 };
 </script>
+
+<style>
+.lang-select {
+  display: flex;
+  justify-content: space-between;
+  width: 70px;
+}
+
+.lang-select img {
+  width: 30px;
+}
+</style>
