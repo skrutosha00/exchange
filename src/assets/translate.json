@@ -1,11 +1,11 @@
 {
   "dostatokLink": {
-    "en": "Link to DoStaTok game",
-    "ru": "Ссылка на ДоСтаТок"
+    "en": "Game DoStaTok",
+    "ru": "Игра ДоСтаТок"
   },
   "umiBotLink": {
-    "en": "Link to Umipay bot",
-    "ru": "Ссылка на Umipay бота"
+    "en": "UmiPay2 - pay in UMI in Telegram",
+    "ru": "UmiPay2 - плати в UMI в Телеграм"
   },
   "messageUmiDataError": {
     "en": "Did not manage to load UMI data",

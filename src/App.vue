@@ -188,7 +188,9 @@ export default {
 
 .link-cont {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
+  gap: 5px 35px;
 
   width: 100%;
   max-width: 380px;
@@ -196,7 +198,7 @@ export default {
 }
 
 .link {
-  padding: 0;
+  padding: 0 !important;
 }
 
 .app_form {
