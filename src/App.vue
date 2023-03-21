@@ -40,7 +40,7 @@ export default {
   name: "App",
   data() {
     return {
-      lang: "en",
+      lang: "ru",
       translate: translate,
       cryptoValue: 0,
       fiatValue: 0,
